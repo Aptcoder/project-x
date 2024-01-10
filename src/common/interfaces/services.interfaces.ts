@@ -1,15 +1,11 @@
 import { CreateFileInput } from "src/services/file.service"
-import { AuthUserDto, CreateUserDTO } from "../dtos/user.dtos"
+import { CreateUserDTO } from "../dtos/user.dtos"
 import { IFile, IFileHistory, IFolder, IUser } from "./entities.interfaces"
 import { CreateFolderDTO } from "../dtos/file.dtos"
 
 export interface IUserService {
     createUser(createUserDto: CreateUserDTO): Promise<IUser>
     getUsers(): Promise<IUser[]>
-    auth(
-        authUserDto: AuthUserDto
-    ): Promise<{ accessToken: string; user: Omit<IUser, "password"> }>
-    logoutUser(userId: string): Promise<void>
 }
 
 export interface IFileService {

@@ -1,12 +1,4 @@
-import {
-    IsEmail,
-    IsNumber,
-    IsOptional,
-    IsString,
-    IsStrongPassword,
-    IsUUID,
-} from "class-validator"
-import { UserRole } from "../../entities/user.entity"
+import { IsEmail, IsString, IsStrongPassword } from "class-validator"
 
 export class CreateUserDTO {
     @IsEmail()
@@ -21,13 +13,23 @@ export class CreateUserDTO {
     @IsString()
     lastName!: string
 
-    role?: UserRole
+    @IsString()
+    roleId: string
 }
 
-export class AuthUserDto {
+export class CreateSuperAdminDTO {
     @IsEmail()
     email!: string
 
-    @IsString()
+    @IsStrongPassword()
     password!: string
+
+    @IsString()
+    firstName!: string
+
+    @IsString()
+    lastName!: string
+
+    @IsString()
+    companyName: string
 }

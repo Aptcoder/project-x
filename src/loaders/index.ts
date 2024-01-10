@@ -3,9 +3,15 @@ import { Application } from "express"
 import { initContainer } from "./container"
 import "./db"
 import { ILogger } from "../common/interfaces/services.interfaces"
+import { runSeeders } from "typeorm-extension"
+import AppDataSource from "./db"
 
 async function init({ expressApp }: { expressApp: Application }) {
     const Container = await initContainer()
+
+    await AppDataSource.initialize()
+    await runSeeders(AppDataSource)
+
     const { loadApp } = await import("./app")
     await loadApp({ app: expressApp, Container: Container })
 

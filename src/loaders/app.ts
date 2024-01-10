@@ -31,6 +31,7 @@ const loadApp = ({
     )
 
     app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+        console.log("er", err)
         if (!(err instanceof APIError)) {
             logger.error(`Unexpected error: ${err}`)
         }
