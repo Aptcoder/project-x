@@ -1,12 +1,13 @@
 import { DataSource } from "typeorm"
+import config from "config"
 
 const AppDataSource = new DataSource({
-    type: "mysql",
-    host: "localhost",
-    port: 3306,
-    username: "test",
-    password: "test",
-    database: "test",
+    type: "postgres",
+    url: config.get<string>("database_url"),
+    logging: false,
+    migrations: ["src/migrations/**/*.ts"],
+    entities: ["src/**/*.entity.ts"],
+    ssl: config.get<boolean>("database.ssl"),
 })
 
 AppDataSource.initialize()
@@ -16,3 +17,5 @@ AppDataSource.initialize()
     .catch((err: any) => {
         console.error("Error during Data Source initialization", err)
     })
+
+export default AppDataSource
