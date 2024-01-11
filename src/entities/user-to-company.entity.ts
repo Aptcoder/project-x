@@ -5,12 +5,14 @@ import {
     PrimaryGeneratedColumn,
     BaseEntity,
     PrimaryColumn,
+    Index,
 } from "typeorm"
 import Company from "./company.entity"
 import User from "./user.entity"
 import { Role } from "./role.entity"
 
 @Entity()
+@Index(["companyId", "userId"])
 export class UserToCompany extends BaseEntity {
     @PrimaryGeneratedColumn("uuid")
     public id: string
