@@ -2,7 +2,6 @@
 import { Application } from "express"
 import { initContainer } from "./container"
 import "./db"
-import { ILogger } from "../common/interfaces/services.interfaces"
 import { runSeeders } from "typeorm-extension"
 import AppDataSource from "./db"
 

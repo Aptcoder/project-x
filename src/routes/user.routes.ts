@@ -8,6 +8,8 @@ import {
     CreateUserDTO,
 } from "../common/dtos/user.dtos"
 import RoleController from "../controllers/role.controller"
+import { Auth as AuthService } from "../middlewares/auth"
+import { CreateRoleDTO, CreateRoleParamDTO } from "../common/dtos/role.dtos"
 
 export const setupUserRoutes = (container: IContainer) => {
     const userRouter: Router = Router()
@@ -39,17 +41,33 @@ export const setupCompanyRoutes = (container: IContainer) => {
     const userController = container.get(UserController)
     const roleController = container.get(RoleController)
 
+    const authService = container.get(AuthService)
+
     cRouter.post(
         "/:companyId/invite-user",
         validator({
             body: CreateUserDTO,
+            param: CreateRoleParamDTO,
         }),
         userController.inviteUser.bind(userController)
     )
 
     cRouter.get(
         "/:companyId/roles",
+        validator({
+            param: CreateRoleParamDTO,
+        }),
+        authService.auth("view-roles"),
         roleController.getAllRoles.bind(roleController)
+    )
+
+    cRouter.post(
+        "/:companyId/roles",
+        validator({
+            body: CreateRoleDTO,
+            param: CreateRoleParamDTO,
+        }),
+        roleController.createCustomRole.bind(roleController)
     )
 
     return cRouter

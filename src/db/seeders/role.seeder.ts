@@ -24,12 +24,20 @@ export default class RoleSeeder implements Seeder {
             ])
         }
 
-        await repository.insert([
-            {
+        const guestUserRole = await repository.findOne({
+            where: {
                 name: "guest-user",
-                permissions: [permissions.VIEW_USERS],
             },
-        ])
+        })
+
+        if (!guestUserRole) {
+            await repository.insert([
+                {
+                    name: "guest-user",
+                    permissions: [permissions.VIEW_USERS],
+                },
+            ])
+        }
 
         // ---------------------------------------------------
 

@@ -14,7 +14,7 @@ export class Role {
     @Column({
         nullable: true,
     })
-    public companyId: number
+    public companyId: string
 
     @ManyToOne(() => Company, (company) => company.userToCompanies)
     public company: Company
