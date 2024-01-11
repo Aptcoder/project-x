@@ -45,6 +45,8 @@
 
 You're all set :)
 
+## ERD
+
 ![ERD diagram for project X](/erd.png?raw=true "ERD diagram for project X")
 
 ## API endpoints
