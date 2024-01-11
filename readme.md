@@ -101,6 +101,16 @@ An invalid email or other parameter was used.
 
 status-code: `409`
 
+An existing user is trying to create another account or same company
+
+```
+{
+    "status": "error",
+    "message": "This user is already part of the company"
+}
+
+```
+
 <hr>
 
 `Endpoint`: POST /api/companies/:companyId/invite-user
@@ -306,7 +316,7 @@ An invalid email or other parameter was used.
 
 <hr>
 
-`Endpoint`: POST /api/user/auth
+`Endpoint`: POST /api/users/auth
 
 Summary: Login any user
 
