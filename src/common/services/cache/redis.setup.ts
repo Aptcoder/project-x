@@ -1,7 +1,7 @@
 import { caching } from "cache-manager"
 import { RedisStore, redisStore } from "cache-manager-redis-yet"
 import config from "config"
-import { ILogger } from "src/common/interfaces/services.interfaces"
+import { ILogger } from "../../interfaces/services.interfaces"
 
 export const init = async (logger: ILogger) => {
     try {

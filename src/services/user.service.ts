@@ -1,9 +1,13 @@
 import { Service, Inject } from "typedi"
 import * as bcrypt from "bcrypt"
 import { APIError, ConflictError } from "../common/errors"
-import { CreateSuperAdminDTO, CreateUserDTO } from "../common/dtos/user.dtos"
-import { IUserService } from "../common/interfaces/services.interfaces"
-
+import {
+    AuthUserDto,
+    CreateSuperAdminDTO,
+    CreateUserDTO,
+} from "../common/dtos/user.dtos"
+import jwt from "jsonwebtoken"
+import config from "config"
 import _ from "lodash"
 import { Repository } from "typeorm"
 import User from "../entities/user.entity"
@@ -128,5 +132,69 @@ export default class UserService {
                 },
             },
         })
+    }
+
+    public async auth(
+        authUserDto: AuthUserDto
+    ): Promise<{ accessToken: string; user: Omit<User, "password"> }> {
+        const { email: userEmail, password: userPassword } = authUserDto
+        let user = await this.userRepository.findOne({
+            where: {
+                email: userEmail.toLowerCase(),
+            },
+            relations: {
+                userToCompanies: {
+                    role: true,
+                    company: true,
+                },
+            },
+        })
+
+        if (!user) {
+            throw new APIError("User not found", 404)
+        }
+
+        const comparePasswordResult = await this.comparePassword(
+            userPassword,
+            user.password!
+        )
+        if (!comparePasswordResult) {
+            throw new APIError("Invalid password", 401)
+        }
+
+        const { accessToken } = await this.generateToken(user)
+        const userWithoutPassword = _.omit(user, "password")
+
+        return { accessToken, user: userWithoutPassword }
+    }
+
+    public async generateToken(user: User): Promise<{ accessToken: string }> {
+        const payload = {
+            email: user.email,
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            userToCompanies: user.userToCompanies,
+        }
+        return new Promise((resolve, reject) => {
+            jwt.sign(
+                payload,
+                config.get<string>("jwtSecret"),
+                {
+                    // expiresIn: '600000'
+                    expiresIn: "18000000",
+                },
+                (err: any, token) => {
+                    if (err) {
+                        return reject(err)
+                    }
+                    return resolve({ accessToken: token as string })
+                }
+            )
+        })
+    }
+
+    public async comparePassword(inputPass: string, password: string) {
+        return bcrypt.compare(inputPass, password)
     }
 }

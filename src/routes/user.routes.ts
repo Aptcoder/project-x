@@ -2,7 +2,11 @@ import { Router } from "express"
 import UserController from "../controllers/user.controller"
 import { IContainer } from "../common/types"
 import validator from "../middlewares/validator"
-import { CreateSuperAdminDTO, CreateUserDTO } from "../common/dtos/user.dtos"
+import {
+    AuthUserDto,
+    CreateSuperAdminDTO,
+    CreateUserDTO,
+} from "../common/dtos/user.dtos"
 import RoleController from "../controllers/role.controller"
 
 export const setupUserRoutes = (container: IContainer) => {
@@ -15,6 +19,14 @@ export const setupUserRoutes = (container: IContainer) => {
             body: CreateSuperAdminDTO,
         }),
         userController.createAdminUser.bind(userController)
+    )
+
+    userRouter.post(
+        "/auth",
+        validator({
+            body: AuthUserDto,
+        }),
+        userController.authUser.bind(userController)
     )
 
     userRouter.get("/", userController.getAllUsers.bind(userController))

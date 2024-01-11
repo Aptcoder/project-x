@@ -33,3 +33,11 @@ export class CreateSuperAdminDTO {
     @IsString()
     companyName: string
 }
+
+export class AuthUserDto {
+    @IsEmail()
+    email!: string
+
+    @IsString()
+    password!: string
+}

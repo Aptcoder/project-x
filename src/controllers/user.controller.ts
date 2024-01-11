@@ -51,6 +51,22 @@ export default class UserController {
         }
     }
 
+    public async authUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { email, password } = req.body
+            const { accessToken, user } = await this.userService.auth({
+                email,
+                password,
+            })
+            return Helper.formatResponse(res, "User auth successful", {
+                token: accessToken,
+                user,
+            })
+        } catch (err) {
+            return next(err)
+        }
+    }
+
     public async getAllUsers(req: Request, res: Response, next: NextFunction) {
         try {
             const users = await this.userService.getUsers()
